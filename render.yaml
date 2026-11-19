@@ -1,0 +1,21 @@
+# Render Blueprint: one web service that serves the API and the built React app.
+# Deploy: Render dashboard -> New -> Blueprint -> pick this repo.
+services:
+  - type: web
+    name: carepal-feedback
+    runtime: node
+    plan: free
+    # --include=dev is needed because Vite (the React build tool) is a dev dependency.
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: NODE_ENV
+        value: production
+      - key: LINK_EXPIRY_DAYS
+        value: "7"
+      # Set this to your Render URL after the first deploy, e.g. https://carepal-feedback.onrender.com
+      - key: PUBLIC_BASE_URL
+        sync: false
